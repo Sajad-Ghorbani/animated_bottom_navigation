@@ -17,7 +17,7 @@ class AnimatedBottomNavigation extends StatefulWidget {
     this.width = 40,
     this.backgroundColor = Colors.white,
     this.direction = TextDirection.ltr,
-    this.curve = Curves.easeIn,
+    this.animationCurve = Curves.easeIn,
     this.height = 75.0,
     this.cornerRadius = 20.0,
     this.horizontalPadding = 20.0,
@@ -33,7 +33,7 @@ class AnimatedBottomNavigation extends StatefulWidget {
   final ValueChanged<int>? onChanged;
   final Color backgroundColor;
   final TextDirection direction;
-  final Curve curve;
+  final Curve animationCurve;
   final double height;
   final Duration animationDuration;
   final double cornerRadius;
@@ -109,7 +109,7 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation> {
                 direction: widget.direction,
                 index: index,
                 isFirstChild: index == 0,
-                curve: widget.curve,
+                curve: widget.animationCurve,
                 showSpaceAfterIcon:
                     index != widget.items.indexOf(widget.items.last),
                 duration: widget.animationDuration,
@@ -128,7 +128,7 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation> {
                 offset: Offset(_slideOffset, 0),
                 width: widget.width,
                 context: context,
-                curve: widget.curve,
+                curve: widget.animationCurve,
                 padding: widget.horizontalPadding,
                 duration: widget.animationDuration,
                 children: item.children!,

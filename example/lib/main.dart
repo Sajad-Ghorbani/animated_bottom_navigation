@@ -108,7 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
         width: 30,
         direction: TextDirection.rtl,
         backgroundColor: Colors.blueAccent,
-        curve: Curves.easeIn,
+        animationCurve: Curves.easeIn,
         onChanged: (value) {
           setState(() {
             currentIndex = value;
