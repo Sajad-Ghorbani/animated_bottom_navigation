@@ -59,55 +59,55 @@ class _MyHomePageState extends State<MyHomePage> {
           TabItem(
             icon: const Icon(
               Icons.hive_sharp,
-              size: 30,
+              size: 30,color: Colors.white,
             ),
             haveChildren: false,
             children: [
-              const Icon(Icons.call, size: 30),
-              const Icon(Icons.photo_rounded, size: 30),
-              const Icon(Icons.add_road, size: 30),
+              const Icon(Icons.call, size: 30,color: Colors.white,),
+              const Icon(Icons.photo_rounded, size: 30,color: Colors.white,),
+              const Icon(Icons.add_road, size: 30,color: Colors.white,),
             ],
           ),
           TabItem(
             icon: const Icon(
               Icons.library_add,
-              size: 30,
+              size: 30,color: Colors.white,
             ),
             haveChildren: true,
             children: [
-              const Icon(Icons.add_a_photo, size: 30),
-              const Icon(Icons.get_app, size: 30),
-              const Icon(Icons.settings, size: 30),
+              const Icon(Icons.add_a_photo, size: 30,color: Colors.white,),
+              const Icon(Icons.get_app, size: 30,color: Colors.white,),
+              const Icon(Icons.settings, size: 30,color: Colors.white,),
             ],
           ),
           TabItem(
             icon: const Icon(
               Icons.bookmark,
-              size: 30,
+              size: 30,color: Colors.white,
             ),
-            haveChildren: true,
-            children: [
-              const Icon(Icons.camera, size: 30),
-              const Icon(Icons.battery_charging_full_rounded, size: 30),
-            ],
+            // haveChildren: true,
+            // children: [
+            //   const Icon(Icons.camera, size: 30,color: Colors.white,),
+            //   const Icon(Icons.battery_charging_full_rounded, size: 30,color: Colors.white,),
+            // ],
           ),
           TabItem(
             icon: const Icon(
               Icons.camera_alt_rounded,
-              size: 30,
+              size: 30,color: Colors.white,
             ),
             haveChildren: true,
             children: [
-              const Icon(Icons.timer_10_select_rounded, size: 30),
-              const Icon(Icons.phone_iphone_rounded, size: 30),
-              const Icon(Icons.alarm, size: 30),
-              const Icon(Icons.color_lens, size: 30),
+              const Icon(Icons.timer_10_select_rounded, size: 30,color: Colors.white,),
+              const Icon(Icons.phone_iphone_rounded, size: 30,color: Colors.white,),
+              const Icon(Icons.alarm, size: 30,color: Colors.white,),
+              const Icon(Icons.color_lens, size: 30,color: Colors.white,),
             ],
           ),
         ],
         width: 30,
         direction: TextDirection.rtl,
-        backgroundColor: Colors.lightBlueAccent,
+        backgroundColor: Colors.blueAccent,
         curve: Curves.easeIn,
         onChanged: (value) {
           setState(() {
