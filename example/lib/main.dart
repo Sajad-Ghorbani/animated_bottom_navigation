@@ -59,6 +59,8 @@ class _MyHomePageState extends State<MyHomePage> {
           TabItem(
             icon: const Icon(Icons.hive_sharp),
             haveChildren: false,
+            activeColor: Colors.white,
+            inActiveColor: Colors.white60,
             children: [
               const Icon(Icons.call),
               const Icon(Icons.photo_rounded),
@@ -68,6 +70,8 @@ class _MyHomePageState extends State<MyHomePage> {
           TabItem(
             icon: const Icon(Icons.library_add),
             haveChildren: true,
+            activeColor: Colors.white,
+            inActiveColor: Colors.white60,
             children: [
               const Icon(Icons.add_a_photo),
               const Icon(Icons.get_app),
@@ -76,10 +80,14 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           TabItem(
             icon: const Icon(Icons.bookmark),
+            activeColor: Colors.white,
+            inActiveColor: Colors.white60,
           ),
           TabItem(
             icon: const Icon(Icons.camera_alt_rounded),
             haveChildren: true,
+            activeColor: Colors.white,
+            inActiveColor: Colors.white60,
             children: [
               const Icon(Icons.timer_10_select_rounded),
               const Icon(Icons.phone_iphone_rounded),
