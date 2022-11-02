@@ -66,7 +66,17 @@ class _ItemChildrenState extends State<ItemChildren> {
       curve: Curves.linearToEaseOut,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: widget.children,
+        children: widget.children.map((item) {
+          if (item.key is ValueKey) {
+            return item;
+          } //
+          else {
+            return IconTheme(
+              data: IconThemeData(size: widget.width),
+              child: item,
+            );
+          }
+        }).toList(),
       ),
     );
   }

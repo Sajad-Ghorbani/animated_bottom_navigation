@@ -57,51 +57,34 @@ class _MyHomePageState extends State<MyHomePage> {
         context: context,
         items: [
           TabItem(
-            icon: const Icon(
-              Icons.hive_sharp,
-              size: 30,color: Colors.white,
-            ),
+            icon: const Icon(Icons.hive_sharp),
             haveChildren: false,
             children: [
-              const Icon(Icons.call, size: 30,color: Colors.white,),
-              const Icon(Icons.photo_rounded, size: 30,color: Colors.white,),
-              const Icon(Icons.add_road, size: 30,color: Colors.white,),
+              const Icon(Icons.call),
+              const Icon(Icons.photo_rounded),
+              const Icon(Icons.add_road),
             ],
           ),
           TabItem(
-            icon: const Icon(
-              Icons.library_add,
-              size: 30,color: Colors.white,
-            ),
+            icon: const Icon(Icons.library_add),
             haveChildren: true,
             children: [
-              const Icon(Icons.add_a_photo, size: 30,color: Colors.white,),
-              const Icon(Icons.get_app, size: 30,color: Colors.white,),
-              const Icon(Icons.settings, size: 30,color: Colors.white,),
+              const Icon(Icons.add_a_photo),
+              const Icon(Icons.get_app),
+              const Icon(Icons.settings),
             ],
           ),
           TabItem(
-            icon: const Icon(
-              Icons.bookmark,
-              size: 30,color: Colors.white,
-            ),
-            // haveChildren: true,
-            // children: [
-            //   const Icon(Icons.camera, size: 30,color: Colors.white,),
-            //   const Icon(Icons.battery_charging_full_rounded, size: 30,color: Colors.white,),
-            // ],
+            icon: const Icon(Icons.bookmark),
           ),
           TabItem(
-            icon: const Icon(
-              Icons.camera_alt_rounded,
-              size: 30,color: Colors.white,
-            ),
+            icon: const Icon(Icons.camera_alt_rounded),
             haveChildren: true,
             children: [
-              const Icon(Icons.timer_10_select_rounded, size: 30,color: Colors.white,),
-              const Icon(Icons.phone_iphone_rounded, size: 30,color: Colors.white,),
-              const Icon(Icons.alarm, size: 30,color: Colors.white,),
-              const Icon(Icons.color_lens, size: 30,color: Colors.white,),
+              const Icon(Icons.timer_10_select_rounded),
+              const Icon(Icons.phone_iphone_rounded),
+              const Icon(Icons.alarm),
+              const Icon(Icons.color_lens),
             ],
           ),
         ],

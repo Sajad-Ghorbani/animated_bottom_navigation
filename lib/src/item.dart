@@ -12,11 +12,17 @@ class TabItem {
   /// Optional children list and must 2 <= children.length <= 5
   final List<Widget>? children;
 
+  final Color activeColor;
+
+  final Color inActiveColor;
+
   /// Create item
   TabItem({
     required this.icon,
     this.haveChildren = false,
     this.children,
+    this.activeColor = Colors.white,
+    this.inActiveColor = Colors.black,
   }) {
     if (children != null) {
       assert(children!.length >= 2);

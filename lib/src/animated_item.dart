@@ -17,10 +17,12 @@ class AnimatedItem extends StatefulWidget {
     required this.width,
     required this.curve,
     required this.duration,
+    required this.activeColor,
+    required this.inActiveColor,
+    required this.spaceWidth,
     this.showSpaceAfterIcon = true,
     this.isFirstChild = false,
     this.haveChildren = false,
-    this.spaceWidth,
   }) : super(key: key);
   final Offset iconOffset;
   final bool iconSelected;
@@ -31,12 +33,14 @@ class AnimatedItem extends StatefulWidget {
   final bool isFirstChild;
   final bool showSpaceAfterIcon;
   final bool haveChildren;
-  final double? spaceWidth;
+  final double spaceWidth;
   final int index;
   final double width;
   final TextDirection direction;
   final Curve curve;
   final Duration duration;
+  final Color activeColor;
+  final Color inActiveColor;
 
   @override
   State<AnimatedItem> createState() => _AnimatedItemState();
@@ -53,12 +57,14 @@ class _AnimatedItemState extends State<AnimatedItem>
   @override
   void initState() {
     super.initState();
+    double spaceAmount =
+        widget.spaceWidth * widget.index + (widget.width * widget.index);
     animationController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: widget.duration.inMilliseconds * 2),
     );
     distanceFromBeginning = Tween<double>(
-      begin: widget.spaceWidth! * widget.index + (widget.width * widget.index),
+      begin: spaceAmount,
       end: 0,
     ).animate(CurvedAnimation(
       parent: animationController,
@@ -156,14 +162,22 @@ class _AnimatedItemState extends State<AnimatedItem>
                 },
                 child: Transform.rotate(
                   angle: widget.haveChildren ? angle.value : 0,
-                  child: widget.icon,
+                  child: IconTheme(
+                    data: IconThemeData(
+                      size: isTapped ? widget.width + 7 : widget.width,
+                      color:
+                          isTapped ? widget.activeColor : widget.inActiveColor,
+                    ),
+                    child: widget.icon,
+                  ),
                 ),
               );
             },
           ),
           if (widget.showSpaceAfterIcon && !showSpace)
-            SizedBox(width: widget.spaceWidth),
-          if (showSpace) const SizedBox(width: 40),
+            SizedBox(
+                width: isTapped ? widget.spaceWidth - 7 : widget.spaceWidth),
+          if (showSpace) const SizedBox(width: 33),
         ],
       ),
     );

@@ -14,8 +14,9 @@ class AnimatedBottomNavigation extends StatefulWidget {
     required this.items,
     this.onChanged,
     LetIndexPage? letIndexChange,
-    this.width = 40,
+    this.width = 30,
     this.backgroundColor = Colors.white,
+    this.backgroundGradient,
     this.direction = TextDirection.ltr,
     this.animationCurve = Curves.easeIn,
     this.height = 75.0,
@@ -32,6 +33,7 @@ class AnimatedBottomNavigation extends StatefulWidget {
   final LetIndexPage letIndexChange;
   final ValueChanged<int>? onChanged;
   final Color backgroundColor;
+  final Gradient? backgroundGradient;
   final TextDirection direction;
   final Curve animationCurve;
   final double height;
@@ -39,7 +41,7 @@ class AnimatedBottomNavigation extends StatefulWidget {
   final double cornerRadius;
   final double horizontalPadding;
 
-  /// This width must equals with width of items and children
+  /// Width of items and children
   final double width;
 
   @override
@@ -55,10 +57,14 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation> {
   List<Map<int, bool>> showItems = [];
   List<bool> showChildren = [];
   List<bool> itemSelected = [];
+  late double rightPadding;
+  late double leftPadding;
 
   @override
   void initState() {
     super.initState();
+    rightPadding = widget.horizontalPadding;
+    leftPadding = widget.horizontalPadding;
     for (int i = 0; i < widget.items.length; i++) {
       offsetList.add({i: 0});
       showItems.add({i: true});
@@ -67,7 +73,7 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation> {
     }
     _length = widget.items.length;
     _constWidth = (MediaQuery.of(widget.context).size.width -
-        (widget.horizontalPadding * 2) -
+            (widget.horizontalPadding * 2) -
             (widget.width * _length)) /
         (_length - 1);
     _slideOffset = widget.direction == TextDirection.rtl ? -1.1 : 1.1;
@@ -79,10 +85,12 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation> {
       color: Colors.transparent,
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(widget.cornerRadius)),
+          borderRadius:
+              BorderRadius.vertical(top: Radius.circular(widget.cornerRadius)),
           color: widget.backgroundColor,
+          gradient: widget.backgroundGradient,
         ),
-        padding: EdgeInsets.symmetric(horizontal: widget.horizontalPadding),
+        padding: EdgeInsets.only(right: rightPadding, left: leftPadding),
         height: widget.height,
         child: Directionality(
           textDirection: widget.direction,
@@ -113,7 +121,19 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation> {
                 showSpaceAfterIcon:
                     index != widget.items.indexOf(widget.items.last),
                 duration: widget.animationDuration,
+                activeColor: item.activeColor,
+                inActiveColor: item.inActiveColor,
                 onTap: () {
+                  setState(() {
+                    if (index == widget.items.indexOf(widget.items.last)) {
+                      if (widget.direction == TextDirection.rtl) {
+                        rightPadding = widget.horizontalPadding - 7;
+                      } //
+                      else {
+                        leftPadding = widget.horizontalPadding - 7;
+                      }
+                    }
+                  });
                   onTap(item, index);
                 },
                 callback: () {
