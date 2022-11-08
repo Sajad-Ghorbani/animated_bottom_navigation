@@ -1,3 +1,6 @@
+# 0.0.3
+* Fix bugs
+
 # 0.0.2
 
 * Add active color and in active color for items
