@@ -25,37 +25,12 @@ class ItemChildren extends StatefulWidget {
 
 class _ItemChildrenState extends State<ItemChildren> {
   late double width;
-  late int _length;
 
   @override
   void initState() {
     super.initState();
-    _length = widget.children.length;
-    width = (MediaQuery.of(widget.context).size.width -
-            // because padding is 40 and space between first item and children is 40
-            ((widget.padding * 2) + 40) -
-            (widget.width * (_length + 1))) /
-        (_length - 1);
-    addSizedBox();
-  }
-
-  addSizedBox() {
-    for (int i = 0; i < widget.children.length; i++) {
-      if (widget.children[i].key == ValueKey('$i')) {
-        //pass
-      } //
-      else {
-        if (i.isOdd) {
-          widget.children.insert(
-            i,
-            SizedBox(
-              key: ValueKey('$i'),
-              width: width,
-            ),
-          );
-        }
-      }
-    }
+    width = MediaQuery.of(widget.context).size.width -
+        ((widget.padding * 2) + 40 + widget.width);
   }
 
   @override
@@ -63,20 +38,18 @@ class _ItemChildrenState extends State<ItemChildren> {
     return AnimatedSlide(
       offset: widget.offset,
       duration: widget.duration,
-      curve: Curves.linearToEaseOut,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: widget.children.map((item) {
-          if (item.key is ValueKey) {
-            return item;
-          } //
-          else {
+      curve: widget.curve,
+      child: SizedBox(
+        width: width,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: widget.children.map((item) {
             return IconTheme(
               data: IconThemeData(size: widget.width),
               child: item,
             );
-          }
-        }).toList(),
+          }).toList(),
+        ),
       ),
     );
   }
