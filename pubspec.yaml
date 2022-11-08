@@ -1,6 +1,6 @@
 name: animated_bottom_navigation
 description: A Flutter package for implementation bottom navigation with beautiful animation
-version: 0.0.2
+version: 0.0.3
 homepage: https://github.com/Sajad-Ghorbani/animated_bottom_navigation
 
 environment:
