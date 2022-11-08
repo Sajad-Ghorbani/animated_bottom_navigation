@@ -17,7 +17,7 @@ class AnimatedBottomNavigation extends StatefulWidget {
     this.width = 30,
     this.backgroundColor = Colors.white,
     this.backgroundGradient,
-    this.direction = TextDirection.ltr,
+    this.direction,
     this.animationCurve = Curves.easeIn,
     this.height = 75.0,
     this.cornerRadius = 20.0,
@@ -34,7 +34,7 @@ class AnimatedBottomNavigation extends StatefulWidget {
   final ValueChanged<int>? onChanged;
   final Color backgroundColor;
   final Gradient? backgroundGradient;
-  final TextDirection direction;
+  final TextDirection? direction;
   final Curve animationCurve;
   final double height;
   final Duration animationDuration;
@@ -53,6 +53,7 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation> {
   late double _slideOffset;
   late int _length;
   late double _constWidth;
+  late TextDirection _direction;
   List<Map<int, double>> offsetList = [];
   List<Map<int, bool>> showItems = [];
   List<bool> showChildren = [];
@@ -63,6 +64,7 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation> {
   @override
   void initState() {
     super.initState();
+    _direction = widget.direction ?? Directionality.of(context);
     rightPadding = widget.horizontalPadding;
     leftPadding = widget.horizontalPadding;
     for (int i = 0; i < widget.items.length; i++) {
@@ -76,7 +78,7 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation> {
             (widget.horizontalPadding * 2) -
             (widget.width * _length)) /
         (_length - 1);
-    _slideOffset = widget.direction == TextDirection.rtl ? -1.1 : 1.1;
+    _slideOffset = _direction == TextDirection.rtl ? -1.1 : 1.1;
   }
 
   @override
@@ -93,7 +95,7 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation> {
         padding: EdgeInsets.only(right: rightPadding, left: leftPadding),
         height: widget.height,
         child: Directionality(
-          textDirection: widget.direction,
+          textDirection: _direction,
           child: body(),
         ),
       ),
@@ -114,7 +116,7 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation> {
                 spaceWidth: _constWidth,
                 haveChildren: item.haveChildren,
                 width: widget.width,
-                direction: widget.direction,
+                direction: _direction,
                 index: index,
                 isFirstChild: index == 0,
                 curve: widget.animationCurve,
@@ -140,6 +142,10 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation> {
                   callBack(index);
                 },
                 onReverseTap: () {
+                  setState(() {
+                    rightPadding = widget.horizontalPadding;
+                    leftPadding = widget.horizontalPadding;
+                  });
                   onReverseTap(item, index);
                 },
               ),
