@@ -10,7 +10,7 @@ class TabItem {
   final bool haveChildren;
 
   /// Optional children list and must 2 <= children.length <= 5
-  final List<Widget>? children;
+  final List<TabChildrenItem>? children;
 
   final Color activeColor;
 

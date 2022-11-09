@@ -1,4 +1,5 @@
 # 0.0.3
+* Define class for item children
 * Fix bugs
 
 # 0.0.2

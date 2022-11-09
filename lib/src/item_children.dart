@@ -1,3 +1,4 @@
+import 'package:animated_bottom_navigation/src/tab_children_item.dart';
 import 'package:flutter/material.dart';
 
 class ItemChildren extends StatefulWidget {
@@ -12,7 +13,7 @@ class ItemChildren extends StatefulWidget {
     required this.padding,
   }) : super(key: key);
   final Offset offset;
-  final List<Widget> children;
+  final List<TabChildrenItem> children;
   final double width;
   final BuildContext context;
   final Curve curve;
@@ -43,10 +44,30 @@ class _ItemChildrenState extends State<ItemChildren> {
         width: width,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: widget.children.map((item) {
+          children: widget.children.map((TabChildrenItem item) {
             return IconTheme(
-              data: IconThemeData(size: widget.width),
-              child: item,
+              data: IconThemeData(
+                size: widget.width,
+                color: item.color,
+              ),
+              child: GestureDetector(
+                onTap: item.onTap,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    item.icon,
+                    if (item.title != null) ...[
+                      const SizedBox(height: 5),
+                      Text(
+                        item.title!,
+                        style: TextStyle(
+                          color: item.color,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
             );
           }).toList(),
         ),

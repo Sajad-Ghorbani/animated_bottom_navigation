@@ -58,13 +58,24 @@ class _MyHomePageState extends State<MyHomePage> {
         items: [
           TabItem(
             icon: const Icon(Icons.hive_sharp),
-            haveChildren: false,
+            haveChildren: true,
             activeColor: Colors.white,
             inActiveColor: Colors.white60,
             children: [
-              const Icon(Icons.call),
-              const Icon(Icons.photo_rounded),
-              const Icon(Icons.add_road),
+              TabChildrenItem(
+                icon: const Icon(Icons.call),
+                title: 'Call',
+                onTap: () {},
+              ),
+              TabChildrenItem(
+                icon: const Icon(Icons.photo_rounded),
+                onTap: () {},
+                title: 'Gallery'
+              ),
+              TabChildrenItem(
+                icon: const Icon(Icons.add_road),
+                onTap: () {},
+              ),
             ],
           ),
           TabItem(
@@ -73,9 +84,18 @@ class _MyHomePageState extends State<MyHomePage> {
             activeColor: Colors.white,
             inActiveColor: Colors.white60,
             children: [
-              const Icon(Icons.add_a_photo),
-              const Icon(Icons.get_app),
-              const Icon(Icons.settings),
+              TabChildrenItem(
+                icon: const Icon(Icons.add_a_photo),
+                onTap: () {},
+              ),
+              TabChildrenItem(
+                icon: const Icon(Icons.get_app),
+                onTap: () {},
+              ),
+              TabChildrenItem(
+                icon: const Icon(Icons.settings),
+                onTap: () {},
+              ),
             ],
           ),
           TabItem(
@@ -89,10 +109,22 @@ class _MyHomePageState extends State<MyHomePage> {
             activeColor: Colors.white,
             inActiveColor: Colors.white60,
             children: [
-              const Icon(Icons.timer_10_select_rounded),
-              const Icon(Icons.phone_iphone_rounded),
-              const Icon(Icons.alarm),
-              const Icon(Icons.color_lens),
+              TabChildrenItem(
+                icon: const Icon(Icons.timer_10_select_rounded),
+                onTap: () {},
+              ),
+              TabChildrenItem(
+                icon: const Icon(Icons.phone_iphone_rounded),
+                onTap: () {},
+              ),
+              TabChildrenItem(
+                icon: const Icon(Icons.alarm),
+                onTap: () {},
+              ),
+              TabChildrenItem(
+                icon: const Icon(Icons.color_lens),
+                onTap: () {},
+              ),
             ],
           ),
         ],
