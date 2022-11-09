@@ -1,3 +1,6 @@
+# 0.0.4
+* Edit README.md
+
 # 0.0.3
 * Define class for item children
 * Fix bugs
