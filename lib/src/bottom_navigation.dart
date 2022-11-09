@@ -64,7 +64,7 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation> {
   @override
   void initState() {
     super.initState();
-    _direction = widget.direction ?? Directionality.of(context);
+    _direction = widget.direction ?? Directionality.of(widget.context);
     rightPadding = widget.horizontalPadding;
     leftPadding = widget.horizontalPadding;
     for (int i = 0; i < widget.items.length; i++) {
