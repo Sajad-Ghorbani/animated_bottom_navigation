@@ -16,32 +16,82 @@ Scaffold(
   bottomNavigationBar: AnimatedBottomNavigation(
     context: context,
     items: [
-      TabItem(icon: const Icon(Icons.hive_sharp)),
+      TabItem(
+        icon: const Icon(Icons.hive_sharp),
+        haveChildren: true,
+        activeColor: Colors.white,
+        inActiveColor: Colors.white60,
+        children: [
+          TabChildrenItem(
+            icon: const Icon(Icons.call),
+            title: 'Call',
+            onTap: () {},
+          ),
+          TabChildrenItem(
+            icon: const Icon(Icons.photo_rounded),
+            onTap: () {},
+            title: 'Gallery'
+          ),
+          TabChildrenItem(
+            icon: const Icon(Icons.add_road),
+            onTap: () {},
+          ),
+        ],
+      ),
       TabItem(
         icon: const Icon(Icons.library_add),
         haveChildren: true,
+        activeColor: Colors.white,
+        inActiveColor: Colors.white60,
         children: [
-          const Icon(Icons.add_a_photo),
-          const Icon(Icons.get_app),
-          const Icon(Icons.settings),
+          TabChildrenItem(
+            icon: const Icon(Icons.add_a_photo),
+            onTap: () {},
+          ),
+          TabChildrenItem(
+            icon: const Icon(Icons.get_app),
+            onTap: () {},
+          ),
+          TabChildrenItem(
+            icon: const Icon(Icons.settings),
+            onTap: () {},
+          ),
         ],
       ),
-      TabItem(icon: const Icon(Icons.bookmark)),
+      TabItem(
+        icon: const Icon(Icons.bookmark),
+        activeColor: Colors.white,
+        inActiveColor: Colors.white60,
+      ),
       TabItem(
         icon: const Icon(Icons.camera_alt_rounded),
         haveChildren: true,
+        activeColor: Colors.white,
+        inActiveColor: Colors.white60,
         children: [
-          const Icon(Icons.timer_10_select_rounded),
-          const Icon(Icons.phone_iphone_rounded),
-          const Icon(Icons.alarm),
-          const Icon(Icons.color_lens),
+          TabChildrenItem(
+            icon: const Icon(Icons.timer_10_select_rounded),
+            onTap: () {},
+          ),
+          TabChildrenItem(
+            icon: const Icon(Icons.phone_iphone_rounded),
+            onTap: () {},
+          ),
+          TabChildrenItem(
+            icon: const Icon(Icons.alarm),
+            onTap: () {},
+          ),
+          TabChildrenItem(
+            icon: const Icon(Icons.color_lens),
+            onTap: () {},
+          ),
         ],
       ),
     ],
     onChanged: (index) {
       // Handle button tap
     },
-),
+  ),
   body: Container(color: Colors.blueAccent),
 )
 ```
@@ -49,7 +99,7 @@ Scaffold(
 ### Attributes
 
 `context`: BuildContext for use in obtaining distances\
-`items`: List of Widgets\
+`items`: List of TabItem for show icons\
 `backgroundColor`: Color of NavigationBar's background, default Colors.white\
 `onChanged`: Function handling taps on items\
 `animationCurve`: Curves interpolating button change animation, default Curves.easeIn\
