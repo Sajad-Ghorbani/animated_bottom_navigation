@@ -1,3 +1,7 @@
+# 0.0.5
+* Add margin to distance around
+* Fixed the problem in calculating the distance of widgets
+
 # 0.0.4
 * Edit README.md
 

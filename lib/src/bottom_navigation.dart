@@ -1,12 +1,15 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:animated_bottom_navigation/src/animated_item.dart';
 import 'package:animated_bottom_navigation/src/item.dart';
 import 'package:animated_bottom_navigation/src/item_children.dart';
 import 'package:flutter/material.dart';
 
+/// Function type that takes an integer value and returns a boolean.
 typedef LetIndexPage = bool Function(int value);
 
+/// The [AnimatedBottomNavigation] widget.
 class AnimatedBottomNavigation extends StatefulWidget {
   AnimatedBottomNavigation({
     Key? key,
@@ -20,28 +23,58 @@ class AnimatedBottomNavigation extends StatefulWidget {
     this.direction,
     this.animationCurve = Curves.easeIn,
     this.height = 75.0,
-    this.cornerRadius = 20.0,
+    this.borderRadius = const BorderRadius.vertical(top: Radius.circular(20)),
     this.horizontalPadding = 20.0,
+    this.margin,
     this.animationDuration = const Duration(milliseconds: 200),
   })  : letIndexChange = letIndexChange ?? ((_) => true),
         assert(items.isNotEmpty),
         assert(0 <= height && height <= 75.0),
         super(key: key);
 
+  /// BuildContext for use in obtaining distances
   final BuildContext context;
+
+  /// List of TabItem for show icons.
+  /// Ensure that the 'items' list is not empty
   final List<TabItem> items;
+
+  /// Function which takes page index as argument and returns bool.
+  ///
+  /// If function returns false then page is not changed on button tap. It returns true by default
   final LetIndexPage letIndexChange;
+
+  /// Callback function that is called when the selected tab changes
   final ValueChanged<int>? onChanged;
+
+  /// Color of NavigationBar's background, default Colors.white
   final Color backgroundColor;
+
+  /// Background gradient for the widget
   final Gradient? backgroundGradient;
+
+  /// Direction of app to handle rotate and layout, default TextDirection.ltr
   final TextDirection? direction;
+
+  /// Curves interpolating button change animation, default Curves.easeIn
   final Curve animationCurve;
+
+  /// Height of NavigationBar, min 0.0, max 75.0
   final double height;
+
+  /// Duration of button change animation, default Duration(milliseconds: 150)
   final Duration animationDuration;
-  final double cornerRadius;
+
+  /// The amount of curvature in the upper edges, default 20.0
+  final BorderRadiusGeometry? borderRadius;
+
+  /// The amount of distance from the surroundings, default 20.0
   final double horizontalPadding;
 
-  /// Width of items and children
+  /// Margin for the widget
+  final EdgeInsetsGeometry? margin;
+
+  /// Width of any widget in NavigationBar, default 40.0
   final double width;
 
   @override
@@ -49,6 +82,7 @@ class AnimatedBottomNavigation extends StatefulWidget {
       _AnimatedBottomNavigationState();
 }
 
+/// The state of the [AnimatedBottomNavigation] widget.
 class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation> {
   late double _slideOffset;
   late int _length;
@@ -76,6 +110,7 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation> {
     _length = widget.items.length;
     _constWidth = (MediaQuery.of(widget.context).size.width -
             (widget.horizontalPadding * 2) -
+            (widget.margin != null ? widget.margin!.collapsedSize.width : 0) -
             (widget.width * _length)) /
         (_length - 1);
     _slideOffset = _direction == TextDirection.rtl ? -1.1 : 1.1;
@@ -84,25 +119,31 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.transparent,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius:
-              BorderRadius.vertical(top: Radius.circular(widget.cornerRadius)),
-          color: widget.backgroundColor,
-          gradient: widget.backgroundGradient,
-        ),
-        padding: EdgeInsets.only(right: rightPadding, left: leftPadding),
-        height: widget.height,
-        child: Directionality(
-          textDirection: _direction,
-          child: body(),
+      margin: widget.margin,
+      child: ClipRRect(
+        borderRadius: widget.borderRadius ?? BorderRadius.zero,
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: widget.borderRadius,
+              color: widget.backgroundColor,
+              gradient: widget.backgroundGradient,
+            ),
+            padding: EdgeInsets.only(right: rightPadding, left: leftPadding),
+            height: widget.height,
+            child: Directionality(
+              textDirection: _direction,
+              child: _body(),
+            ),
+          ),
         ),
       ),
     );
   }
 
-  Widget body() {
+  /// The body of the [AnimatedBottomNavigation] widget.
+  Widget _body() {
     return Row(
       children: widget.items.map((item) {
         int index = widget.items.indexOf(item);
@@ -125,6 +166,7 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation> {
                 duration: widget.animationDuration,
                 activeColor: item.activeColor,
                 inActiveColor: item.inActiveColor,
+                childrenCount: item.children?.length,
                 onTap: () {
                   setState(() {
                     if (index == widget.items.indexOf(widget.items.last)) {
@@ -136,17 +178,17 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation> {
                       }
                     }
                   });
-                  onTap(item, index);
+                  _onTap(item, index);
                 },
                 callback: () {
-                  callBack(index);
+                  _callBack(index);
                 },
                 onReverseTap: () {
                   setState(() {
                     rightPadding = widget.horizontalPadding;
                     leftPadding = widget.horizontalPadding;
                   });
-                  onReverseTap(item, index);
+                  _onReverseTap(item, index);
                 },
               ),
             if (showChildren[index] == true)
@@ -156,6 +198,9 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation> {
                 context: context,
                 curve: widget.animationCurve,
                 padding: widget.horizontalPadding,
+                margin: widget.margin != null
+                    ? widget.margin!.collapsedSize.width
+                    : 0,
                 duration: widget.animationDuration,
                 children: item.children!,
               ),
@@ -165,7 +210,8 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation> {
     );
   }
 
-  void setPage(int index) {
+  /// Sets the current page.
+  void _setPage(int index) {
     if (!widget.letIndexChange(index)) {
       return;
     }
@@ -174,12 +220,13 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation> {
     }
   }
 
-  void onTap(TabItem item, int index) async {
+  /// Called when an item is tapped.
+  void _onTap(TabItem item, int index) async {
     Future.delayed(
         Duration(milliseconds: widget.animationDuration.inMilliseconds * 2),
         () {
       if (widget.onChanged != null) {
-        setPage(index);
+        _setPage(index);
       }
     });
     setState(() {
@@ -204,7 +251,8 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation> {
     }
   }
 
-  void callBack(int index) {
+  /// Called when an item has children.
+  void _callBack(int index) {
     setState(() {
       showChildren[index] = true;
     });
@@ -215,7 +263,8 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation> {
     });
   }
 
-  void onReverseTap(TabItem item, int index) {
+  /// Called when an item is tapped to reverse.
+  void _onReverseTap(TabItem item, int index) {
     if (item.haveChildren) {
       setState(() {
         _slideOffset = -1.1;

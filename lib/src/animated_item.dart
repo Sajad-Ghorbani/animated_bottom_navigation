@@ -20,6 +20,7 @@ class AnimatedItem extends StatefulWidget {
     required this.activeColor,
     required this.inActiveColor,
     required this.spaceWidth,
+    this.childrenCount,
     this.showSpaceAfterIcon = true,
     this.isFirstChild = false,
     this.haveChildren = false,
@@ -41,6 +42,7 @@ class AnimatedItem extends StatefulWidget {
   final Duration duration;
   final Color activeColor;
   final Color inActiveColor;
+  final int? childrenCount;
 
   @override
   State<AnimatedItem> createState() => _AnimatedItemState();
@@ -61,7 +63,7 @@ class _AnimatedItemState extends State<AnimatedItem>
         widget.spaceWidth * widget.index + (widget.width * widget.index);
     animationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: widget.duration.inMilliseconds * 2),
+      duration: widget.duration * 2,
     );
     distanceFromBeginning = Tween<double>(
       begin: spaceAmount,
@@ -131,8 +133,7 @@ class _AnimatedItemState extends State<AnimatedItem>
                         widget.callback!();
                       });
                       Future.delayed(
-                          Duration(
-                              milliseconds: widget.duration.inMilliseconds * 2),
+                          widget.duration * 2,
                           () {
                         setState(() {
                           showSpace = true;
@@ -144,14 +145,11 @@ class _AnimatedItemState extends State<AnimatedItem>
                     widget.onReverseTap();
                     if (widget.haveChildren) {
                       Future.delayed(
-                          Duration(
-                              milliseconds:
-                                  widget.duration.inMilliseconds + 50), () {
+                          widget.duration + Duration(milliseconds: 50), () {
                         animationController.reverse();
                       });
                       Future.delayed(
-                          Duration(
-                              milliseconds: widget.duration.inMilliseconds * 2),
+                          widget.duration * 2,
                           () {
                         setState(() {
                           showSpace = false;
@@ -177,7 +175,11 @@ class _AnimatedItemState extends State<AnimatedItem>
           if (widget.showSpaceAfterIcon && !showSpace)
             SizedBox(
                 width: isTapped ? widget.spaceWidth - 7 : widget.spaceWidth),
-          if (showSpace) const SizedBox(width: 33),
+          if (showSpace)
+            SizedBox(
+                width: widget.childrenCount != null && widget.childrenCount! > 3
+                    ? 13
+                    : 33),
         ],
       ),
     );

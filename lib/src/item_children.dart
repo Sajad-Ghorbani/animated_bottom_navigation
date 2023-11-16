@@ -11,7 +11,9 @@ class ItemChildren extends StatefulWidget {
     required this.curve,
     required this.duration,
     required this.padding,
+    required this.margin,
   }) : super(key: key);
+  
   final Offset offset;
   final List<TabChildrenItem> children;
   final double width;
@@ -19,6 +21,7 @@ class ItemChildren extends StatefulWidget {
   final Curve curve;
   final Duration duration;
   final double padding;
+  final double margin;
 
   @override
   State<ItemChildren> createState() => _ItemChildrenState();
@@ -30,8 +33,12 @@ class _ItemChildrenState extends State<ItemChildren> {
   @override
   void initState() {
     super.initState();
+    // Calculate the width of the children
     width = MediaQuery.of(widget.context).size.width -
-        ((widget.padding * 2) + 40 + widget.width);
+        ((widget.padding * 2) +
+            widget.margin +
+            (widget.children.length > 3 ? 20 : 40) +
+            widget.width);
   }
 
   @override

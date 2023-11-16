@@ -33,7 +33,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int currentIndex = 0;
 
-  List<Widget> widgets = [];
+  late List<Widget> widgets;
 
   @override
   void initState() {
@@ -70,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
               TabChildrenItem(
                 icon: const Icon(Icons.photo_rounded),
                 onTap: () {},
-                title: 'Gallery'
+                title: 'Gallery',
               ),
               TabChildrenItem(
                 icon: const Icon(Icons.add_road),

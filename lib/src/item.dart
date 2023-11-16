@@ -23,10 +23,6 @@ class TabItem {
     this.children,
     this.activeColor = Colors.white,
     this.inActiveColor = Colors.black,
-  }) {
-    if (children != null) {
-      assert(children!.length >= 2);
-      assert(children!.length <= 5);
-    }
-  }
+  }) : assert(
+            children == null || (children.isNotEmpty && children.length <= 5));
 }
