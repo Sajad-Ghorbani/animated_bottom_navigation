@@ -108,8 +108,9 @@ Scaffold(
 `width`: Width of any widget in NavigationBar, default 40.0\
 `letIndexChange`: Function which takes page index as argument and returns bool. If function returns false then page is not changed on button tap. It returns true by default\
 `direction`: Direction of app to handle rotate and layout, default TextDirection.ltr\
-`cornerRadius`: The amount of curvature in the upper edges, default 20.0\
+`borderRadius`: The amount of curvature in the upper edges, default 20.0\
 `horizontalPadding`: The amount of distance from the surroundings, default 20.0\
+`margin`: Margin for the widget\
 
 ## Features
 
