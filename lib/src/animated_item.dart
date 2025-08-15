@@ -24,6 +24,8 @@ class AnimatedItem extends StatefulWidget {
     this.showSpaceAfterIcon = true,
     this.isFirstChild = false,
     this.haveChildren = false,
+    this.isTapped = false,
+    this.showSpace = false,
   }) : super(key: key);
   final Offset iconOffset;
   final bool iconSelected;
@@ -43,6 +45,8 @@ class AnimatedItem extends StatefulWidget {
   final Color activeColor;
   final Color inActiveColor;
   final int? childrenCount;
+  final bool isTapped;
+  final bool showSpace;
 
   @override
   State<AnimatedItem> createState() => _AnimatedItemState();
@@ -53,12 +57,13 @@ class _AnimatedItemState extends State<AnimatedItem>
   late Animation<double> distanceFromBeginning;
   late Animation<double> angle;
   late AnimationController animationController;
-  bool isTapped = false;
-  bool showSpace = false;
+
+  bool _previousTapState = false;
 
   @override
   void initState() {
     super.initState();
+    _previousTapState = widget.isTapped;
     double spaceAmount =
         widget.spaceWidth * widget.index + (widget.width * widget.index);
     animationController = AnimationController(
@@ -88,6 +93,29 @@ class _AnimatedItemState extends State<AnimatedItem>
           curve: widget.curve,
         ),
       ));
+    }
+  }
+
+  @override
+  void didUpdateWidget(AnimatedItem oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.isTapped != _previousTapState) {
+      if (widget.isTapped) {
+        if (widget.haveChildren) {
+          Future.delayed(widget.duration, () async {
+            await animationController.forward();
+          });
+        }
+      } else {
+        if (widget.haveChildren) {
+          Future.delayed(widget.duration + const Duration(milliseconds: 50),
+              () {
+            animationController.reverse();
+          });
+        }
+      }
+      _previousTapState = widget.isTapped;
     }
   }
 
@@ -122,49 +150,21 @@ class _AnimatedItemState extends State<AnimatedItem>
             builder: (context, child) {
               return GestureDetector(
                 onTap: () async {
-                  setState(() {
-                    isTapped = !isTapped;
-                  });
-                  if (isTapped) {
+                  if (!widget.isTapped) {
                     widget.onTap();
-                    if (widget.haveChildren) {
-                      Future.delayed(widget.duration, () async {
-                        await animationController.forward();
-                        widget.callback!();
-                      });
-                      Future.delayed(
-                          widget.duration * 2,
-                          () {
-                        setState(() {
-                          showSpace = true;
-                        });
-                      });
-                    }
                   } //
                   else {
                     widget.onReverseTap();
-                    if (widget.haveChildren) {
-                      Future.delayed(
-                          widget.duration + Duration(milliseconds: 50), () {
-                        animationController.reverse();
-                      });
-                      Future.delayed(
-                          widget.duration * 2,
-                          () {
-                        setState(() {
-                          showSpace = false;
-                        });
-                      });
-                    }
                   }
                 },
                 child: Transform.rotate(
                   angle: widget.haveChildren ? angle.value : 0,
                   child: IconTheme(
                     data: IconThemeData(
-                      size: isTapped ? widget.width + 7 : widget.width,
-                      color:
-                          isTapped ? widget.activeColor : widget.inActiveColor,
+                      size: widget.isTapped ? widget.width + 7 : widget.width,
+                      color: widget.isTapped
+                          ? widget.activeColor
+                          : widget.inActiveColor,
                     ),
                     child: widget.icon,
                   ),
@@ -172,10 +172,12 @@ class _AnimatedItemState extends State<AnimatedItem>
               );
             },
           ),
-          if (widget.showSpaceAfterIcon && !showSpace)
+          if (widget.showSpaceAfterIcon && !widget.showSpace)
             SizedBox(
-                width: isTapped ? widget.spaceWidth - 7 : widget.spaceWidth),
-          if (showSpace)
+                width: widget.isTapped
+                    ? widget.spaceWidth - 7
+                    : widget.spaceWidth),
+          if (widget.showSpace)
             SizedBox(
                 width: widget.childrenCount != null && widget.childrenCount! > 3
                     ? 13

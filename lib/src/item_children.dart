@@ -13,7 +13,7 @@ class ItemChildren extends StatefulWidget {
     required this.padding,
     required this.margin,
   }) : super(key: key);
-  
+
   final Offset offset;
   final List<TabChildrenItem> children;
   final double width;

@@ -92,6 +92,8 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation> {
   List<Map<int, bool>> showItems = [];
   List<bool> showChildren = [];
   List<bool> itemSelected = [];
+  List<bool> onItemsTapped = [];
+  List<bool> showItemsSpace = [];
   late double rightPadding;
   late double leftPadding;
 
@@ -106,6 +108,8 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation> {
       showItems.add({i: true});
       showChildren.add(false);
       itemSelected.add(false);
+      onItemsTapped.add(false);
+      showItemsSpace.add(false);
     }
     _length = widget.items.length;
     _constWidth = (MediaQuery.of(widget.context).size.width -
@@ -118,23 +122,37 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: widget.margin,
-      child: ClipRRect(
-        borderRadius: widget.borderRadius ?? BorderRadius.zero,
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: widget.borderRadius,
-              color: widget.backgroundColor,
-              gradient: widget.backgroundGradient,
-            ),
-            padding: EdgeInsets.only(right: rightPadding, left: leftPadding),
-            height: widget.height,
-            child: Directionality(
-              textDirection: _direction,
-              child: _body(),
+    return PopScope(
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) {
+          return;
+        }
+        _closeItems();
+      },
+      child: TapRegion(
+        onTapOutside: (event) {
+          _closeItems();
+        },
+        child: Container(
+          margin: widget.margin,
+          child: ClipRRect(
+            borderRadius: widget.borderRadius ?? BorderRadius.zero,
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: widget.borderRadius,
+                  color: widget.backgroundColor,
+                  gradient: widget.backgroundGradient,
+                ),
+                padding:
+                    EdgeInsets.only(right: rightPadding, left: leftPadding),
+                height: widget.height,
+                child: Directionality(
+                  textDirection: _direction,
+                  child: _body(),
+                ),
+              ),
             ),
           ),
         ),
@@ -161,15 +179,19 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation> {
                 index: index,
                 isFirstChild: index == 0,
                 curve: widget.animationCurve,
-                showSpaceAfterIcon:
-                    index != widget.items.indexOf(widget.items.last),
+                showSpaceAfterIcon: index != widget.items.length - 1,
                 duration: widget.animationDuration,
                 activeColor: item.activeColor,
                 inActiveColor: item.inActiveColor,
                 childrenCount: item.children?.length,
-                onTap: () {
+                isTapped: onItemsTapped[index],
+                showSpace: showItemsSpace[index],
+                onTap: () async {
                   setState(() {
-                    if (index == widget.items.indexOf(widget.items.last)) {
+                    onItemsTapped[index] = !onItemsTapped[index];
+                  });
+                  setState(() {
+                    if (index == widget.items.length - 1) {
                       if (widget.direction == TextDirection.rtl) {
                         rightPadding = widget.horizontalPadding - 7;
                       } //
@@ -178,17 +200,23 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation> {
                       }
                     }
                   });
-                  _onTap(item, index);
+                  await _onTap(item, index);
+                  if (item.haveChildren) {
+                    Future.delayed(widget.animationDuration, () async {
+                      _callBack(index);
+                    });
+                    Future.delayed(widget.animationDuration, () {
+                      setState(() {
+                        showItemsSpace[index] = true;
+                      });
+                    });
+                  }
                 },
                 callback: () {
                   _callBack(index);
                 },
                 onReverseTap: () {
-                  setState(() {
-                    rightPadding = widget.horizontalPadding;
-                    leftPadding = widget.horizontalPadding;
-                  });
-                  _onReverseTap(item, index);
+                  _closeItems();
                 },
               ),
             if (showChildren[index] == true)
@@ -221,7 +249,7 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation> {
   }
 
   /// Called when an item is tapped.
-  void _onTap(TabItem item, int index) async {
+  Future<void> _onTap(TabItem item, int index) async {
     Future.delayed(
         Duration(milliseconds: widget.animationDuration.inMilliseconds * 2),
         () {
@@ -264,7 +292,7 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation> {
   }
 
   /// Called when an item is tapped to reverse.
-  void _onReverseTap(TabItem item, int index) {
+  Future<void> _onReverseTap(TabItem item, int index) async {
     if (item.haveChildren) {
       setState(() {
         _slideOffset = -1.1;
@@ -304,6 +332,27 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation> {
           offsetList[i] = {i: 0};
         }
       });
+    }
+  }
+
+  void _closeItems() async {
+    for (int i = 0; i < itemSelected.length; i++) {
+      if (onItemsTapped[i]) {
+        setState(() {
+          onItemsTapped[i] = !onItemsTapped[i];
+          rightPadding = widget.horizontalPadding;
+          leftPadding = widget.horizontalPadding;
+        });
+        await _onReverseTap(widget.items[i], i);
+        if (widget.items[i].haveChildren) {
+          Future.delayed(widget.animationDuration * 2, () {
+            setState(() {
+              showItemsSpace[i] = false;
+            });
+          });
+        }
+        break; // Assume only one is selected
+      }
     }
   }
 }

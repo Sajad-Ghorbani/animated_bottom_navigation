@@ -12,8 +12,10 @@ class TabItem {
   /// Optional children list and must 2 <= children.length <= 5
   final List<TabChildrenItem>? children;
 
+  /// Active color for item, default is white
   final Color activeColor;
 
+  /// Inactive color for item, default is black
   final Color inActiveColor;
 
   /// Create item
